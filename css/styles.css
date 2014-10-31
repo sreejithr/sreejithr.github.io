@@ -1,16 +1,16 @@
 @font-face {
     font-family: SlimJoe;
-    src: url("fonts/Slim-Joe.otf");
+    src: url("../fonts/Slim-Joe.otf");
 }
 
 @font-face {
     font-family: Langdon;
-    src: url("fonts/Langdon.otf");
+    src: url("../fonts/Langdon.otf");
 }
 
 @font-face {
     font-family: Tryst;
-    src: url("fonts/Tryst-Regular.otf");
+    src: url("../fonts/Tryst-Regular.otf");
 }
 
 html body {
@@ -59,12 +59,8 @@ html body {
     color: #BFBC3D;
 }
 
-.social-icon-section {
-    font-size: 1em;
-}
-
-.st-icon-yahoo:before {
-    color: #36383A;
+.social-icon img {
+    width: 2.5em;
 }
 
 .bottom-column {
