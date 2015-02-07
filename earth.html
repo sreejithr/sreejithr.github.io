@@ -64,10 +64,6 @@
 					scene.add( light );
 
 					camera.position.z = 5;
-
-					$(document).mousemove(function(event) {
-
-					})
 				}
 
 				function render() {
@@ -76,7 +72,7 @@
 
 					earthMesh.rotation.y += 0.001;
 
-					cloudMesh.rotation.x -= 0.0005;
+					cloudMesh.rotation.x -= 0.001;
 					cloudMesh.rotation.y -= 0.0005;
 				}
 
