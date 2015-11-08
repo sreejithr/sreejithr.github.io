@@ -30,12 +30,11 @@
 
 	#left_nav {
 		position: absolute;
-		padding: 20px;
 	    left: 50%;
 	    top: 50%;
 	    transform: translate(-50%, -50%);
 	    border: none;
-	    margin: 0px;
+	    margin-top: 100px;
 	    width: 13.4em;
 	    color: white;
 	    z-index: 1000;
@@ -43,7 +42,7 @@
 
 		#left_nav .section {
 			margin-top: 25px;
-		    font-size: 20px;
+		    font-size: 15px;
 		    font-family: "Helvetica Neue";
 		    font-weight: 200;
 		}
