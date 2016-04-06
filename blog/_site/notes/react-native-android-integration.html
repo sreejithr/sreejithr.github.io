@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1" /><title>React Native Integration for Production</title><meta name="twitter:card" content="summary" /><meta name="twitter:site" content="@locomunkey" /><meta name="twitter:title" content="React Native Integration for Production" /><meta name="twitter:description" content="Last month was a rollercoaster ride for my team-mates and I, at DriveU. With plans of eventually completely replacing our apps with React Native, we were tasked with making and integrating one page..."><meta name="description" content="Last month was a rollercoaster ride for my team-mates and I, at DriveU. With plans of eventually completely replacing our apps with React Native, we were tas..."><meta name="google-site-verification" content="epFgX0s_0RM3CdjwFcsewfXzPov2g8s9ZBOLyaIUH-o"><link rel="icon" href="/assets/favicon.png"><link rel="apple-touch-icon" href="/assets/touch-icon.png"><link rel="stylesheet" href="//code.cdn.mozilla.net/fonts/fira.css"><link rel="stylesheet" href="/assets/core.css"><link rel="canonical" href="/notes/react-native-android-integration"><link rel="alternate" type="application/atom+xml" title="Sreejith Ramakrishnan" href="/feed.xml" /></head><body><aside class="logo"> <a href="/"> <img src="http://www.gravatar.com/avatar/2b38b1b0e7e08b69379bd61582adf0c8.png?s=80" class="gravatar"> </a> <span class="logo-prompt">Back to Home</span></aside><main> <noscript><style> article .footnotes { display: block; }</style></noscript><article><div class="center"><h1>React Native Integration for Production</h1><p>Integrate React Native-based activities in your Android app</p></div><div class="divider"></div><p>Last month was a rollercoaster ride for my team-mates and I, at DriveU. With plans of eventually completely replacing our apps with React Native, we were tasked with making and integrating one page in our app in React Native as sort of a proof of concept. This had to be good.</p><p>If you’ve been active in the React Native circles, you know for a fact, that Android always tends to get a raw deal in the documentation department.</p><p>The <a href="https://facebook.github.io/react-native/docs/embedded-app-android.html">official documentation</a> for integrating React Native into an existing app lacks a lot of details. Which is why I hoping this will help save you a lot of time.</p><p>Here I’ll cover:</p><ul><li>Integrate a React Native based activity into the app.</li><li>Obtain an optimized, minified production RN bundle to include in your app.</li></ul><h3 id="create-an-android-activity">Create an Android activity</h3><p>Add this activity in your Android project.</p><pre><code>package com.yourproject;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.KeyEvent;
+
+import com.yourproject.BuildConfig;
+import com.facebook.react.LifecycleState;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactRootView;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.shell.MainReactPackage;
+
+
+public class YourActivity extends Activity implements DefaultHardwareBackBtnHandler {
+    private ReactRootView mReactRootView;
+    private ReactInstanceManager mReactInstanceManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mReactRootView = new ReactRootView(this);
+        mReactInstanceManager = ReactInstanceManager.builder()
+                .setApplication(getApplication())
+                .setBundleAssetName("index.android.bundle")
+                .setJSMainModuleName("index.android")
+                .addPackage(new MainReactPackage())
+                .setUseDeveloperSupport(BuildConfig.DEBUG) // Remove in Production
+                .setInitialLifecycleState(LifecycleState.RESUMED)
+                .build();
+        mReactRootView.startReactApplication(mReactInstanceManager, "YourReactApp", null);
+
+        setContentView(mReactRootView);
+    }
+
+    @Override
+    public void invokeDefaultOnBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onPause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onResume(this, this);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU &amp;&amp; mReactInstanceManager != null) {
+            mReactInstanceManager.showDevOptionsDialog();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+}
+
+</code></pre><p>Removing <code>.setUseDeveloperSupport(BuildConfig.DEBUG)</code> gets rid of the developer options which come up when you shake the device.</p><h3 id="add-dependencies-to-buildgradle">Add dependencies to build.gradle</h3><p>Add this to the <code>dependencies</code> section of your <code>build.gradle</code>, for, you know, reasons.</p><pre><code>compile 'com.facebook.react:react-native:0.19.+'
+</code></pre><h3 id="edit-the-manifest-file">Edit the Manifest file</h3><p>Add <code>&lt;activity android:name=".activity.YourActivity"/&gt;</code>. If you want this screen to come up <strong>at launch</strong>, add this:</p><pre><code>&lt;activity android:name=".activity.YourActivity"
+          android:screenOrientation="portrait"&gt;
+    &lt;intent-filter&gt;
+        &lt;action android:name="android.intent.action.MAIN" /&gt;
+        &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+    &lt;/intent-filter&gt;
+&lt;/activity&gt;
+</code></pre><h3 id="edit-the-gradleproperties">Edit the gradle.properties</h3><p>While building, you may encounter issues like <code>Error: NDK integration is deprecated in the current plugin</code>. To fix this error, add,</p><pre><code>android.useDeprecatedNdk=true
+</code></pre><p>to your <code>gradle.properties</code> file.</p><h3 id="get--include-the-js-bundle">Get &amp; Include the JS Bundle</h3><p>To get the JS bundle (named <code>index.android.bundle</code> for this project. See <code>YourActivity</code> code), start your packaging server (if not already running) using <code>npm start</code> and do a curl,</p><pre><code>curl http://localhost:8081/index.android.bundle?platform=android&amp;dev=false&amp;hot=false&amp;minify=true -o index.android.bundle
+</code></pre><p>This is a production grade file; with hot code replacement and developer mode disabled. Put this file in your <code>android/app/src/main/assets/</code>.</p><p>There’s ways to get this bundle using the <code>react-native bundle</code> command. But, it’s painfully slow in my machine. So, I tend to curl out the bundle.</p><h3 id="done">Done!</h3><p>That’s it. Now run the app in your device and see your React view on the screen in all it’s glory!</p><p>We’re still assessing it’s performance in production. I hope to get some juicy insights in a couple of weeks :)</p></article><div class="back"> <a href="/">Back</a></div></main></body></html>
