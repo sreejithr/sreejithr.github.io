@@ -398,3 +398,22 @@ section {
     -webkit-transform: none;
   }
 }
+
+#social-links {
+  text-align: center;
+}
+
+#social-links img {
+  height: 30px;
+  width: 30px;
+}
+
+#social-links a {
+  border: none;
+  padding: 0px;
+}
+
+#social-links a:hover {
+  padding: 0px;
+  background-color: white;
+}
