@@ -4,7 +4,7 @@ title: React Native Integration for Production
 subtitle: Integrate React Native-based activities in your Android app
 ---
 
-Last month was a rollercoaster ride for my team-mates and I, at DriveU. With plans of eventually completely **replacing our apps with React Native**, we were tasked with making and integrating one page in our app in React Native as sort of a proof of concept. This had to be good.
+Last month was a rollercoaster ride for my team-mates and I, at [DriveU](http://driveu.in). With plans of eventually completely **replacing our apps with React Native**, we were tasked with making and integrating one page in our app in React Native as sort of a proof of concept. This had to be good.
 
 If you've been active in the React Native circles, you know for a fact, that Android always tends to get a raw deal in the documentation department.
 
