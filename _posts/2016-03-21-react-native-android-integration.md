@@ -13,7 +13,7 @@ The [official documentation](https://facebook.github.io/react-native/docs/embedd
 Here I'll cover:
 
 * Integrate a React Native based activity into the app.
-* Obtain an optimized, minified production RN bundle to include in your app.
+* Include an optimized, minified production RN bundle.
 
 
 ### Create an Android activity
@@ -100,7 +100,7 @@ public class YourActivity extends Activity implements DefaultHardwareBackBtnHand
 }
 
 ```
-The `BuildConfig` is build generated class. I work from Android Studio. Changing the `Build Variants`(in left sidebar) to `release` will make `BuildConfig.DEBUG` to false.
+The `BuildConfig` class generated at build time. Since, I work in Android Studio, changing the `Build Variants`(in left sidebar) to `release` will make `BuildConfig.DEBUG` to false.
 
 ### Add dependencies to build.gradle
 Add this to the `dependencies` section of your `build.gradle`, for, you know, reasons.
@@ -109,11 +109,13 @@ Add this to the `dependencies` section of your `build.gradle`, for, you know, re
 compile 'com.facebook.react:react-native:+'
 ```
 
-Use the version you need. I'm just leaving this for getting the latest version.
+Use the version you need. I just used this to get the latest version.
 
 ### Edit the Manifest file
 
-Add `<activity android:name=".activity.YourActivity"/>`. If you want this screen to come up **at launch**, add this:
+Add `<activity android:name=".activity.YourActivity"/>`.
+
+If you want this screen to come up **at launch**, add this:
 
 ```
 <activity android:name=".activity.YourActivity"
@@ -139,14 +141,19 @@ to your `gradle.properties` file.
 To get the JS bundle (named `index.android.bundle` for this project. See `YourActivity` code), run the following command:
 
 ```
-react-native bundle --assets-dest ./android/app/src/main/res/ --entry-file ./index.android.js --bundle-output ./android/app/src/main/assets/index.android.bundle --platform android --dev false
+react-native bundle \
+   --assets-dest ./android/app/src/main/res/ \
+   --entry-file ./index.android.js \
+   --bundle-output ./android/app/src/main/assets/index.android.bundle \
+   --platform android \
+   --dev false
 ```
 
 Do this in the base directory of your project so that `./android` is accessible. This is a production grade file; with hot code replacement and developer mode disabled.
 
 ### Done!
 
-That's it. Now run the app in your device and see your React view on the screen in all it's glory!
+That's it. Now run the app in your device and see your React Native view in all it's glory!
 
 We're still assessing it's performance in production. I hope to get some juicy insights in a couple of weeks :)
 
