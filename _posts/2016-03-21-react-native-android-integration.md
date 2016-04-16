@@ -4,7 +4,7 @@ title: React Native Integration for Production
 subtitle: Integrate React Native-based activities in your Android app
 ---
 
-Last month was a rollercoaster ride for my team-mates and I, at DriveU. With plans of eventually completely replacing our apps with React Native, we were tasked with making and integrating one page in our app in React Native as sort of a proof of concept. This had to be good.
+Last month was a rollercoaster ride for my team-mates and I, at DriveU. With plans of eventually completely **replacing our apps with React Native**, we were tasked with making and integrating one page in our app in React Native as sort of a proof of concept. This had to be good.
 
 If you've been active in the React Native circles, you know for a fact, that Android always tends to get a raw deal in the documentation department.
 
@@ -48,7 +48,7 @@ public class YourActivity extends Activity implements DefaultHardwareBackBtnHand
                 .setBundleAssetName("index.android.bundle")
                 .setJSMainModuleName("index.android")
                 .addPackage(new MainReactPackage())
-                .setUseDeveloperSupport(BuildConfig.DEBUG) // Remove in Production
+                .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
         mReactRootView.startReactApplication(mReactInstanceManager, "YourReactApp", null);
@@ -100,14 +100,16 @@ public class YourActivity extends Activity implements DefaultHardwareBackBtnHand
 }
 
 ```
-Removing `.setUseDeveloperSupport(BuildConfig.DEBUG)` gets rid of the developer options which come up when you shake the device.
+The `BuildConfig` is build generated class. I work from Android Studio. Changing the `Build Variants`(in left sidebar) to `release` will make `BuildConfig.DEBUG` to false.
 
 ### Add dependencies to build.gradle
 Add this to the `dependencies` section of your `build.gradle`, for, you know, reasons.
 
 ```
-compile 'com.facebook.react:react-native:0.19.+'
+compile 'com.facebook.react:react-native:+'
 ```
+
+Use the version you need. I'm just leaving this for getting the latest version.
 
 ### Edit the Manifest file
 
@@ -134,15 +136,13 @@ to your `gradle.properties` file.
 
 ### Get & Include the JS Bundle
 
-To get the JS bundle (named `index.android.bundle` for this project. See `YourActivity` code), start your packaging server (if not already running) using `npm start` and do a curl,
+To get the JS bundle (named `index.android.bundle` for this project. See `YourActivity` code), run the following command:
 
 ```
-curl http://localhost:8081/index.android.bundle?platform=android&dev=false&hot=false&minify=true -o index.android.bundle
+react-native bundle --assets-dest ./android/app/src/main/res/ --entry-file ./index.android.js --bundle-output ./android/app/src/main/assets/index.android.bundle --platform android --dev false
 ```
 
-This is a production grade file; with hot code replacement and developer mode disabled. Put this file in your `android/app/src/main/assets/`.
-
-There's ways to get this bundle using the `react-native bundle` command. But, it's painfully slow in my machine. So, I tend to curl out the bundle.
+Do this in the base directory of your project so that `./android` is accessible. This is a production grade file; with hot code replacement and developer mode disabled.
 
 ### Done!
 
