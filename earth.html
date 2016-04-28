@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<title>My first Three.js app</title>
+		<style>
+			body {
+				margin: 0;
+			}
+			canvas {
+				width: 100%;
+				height: 100%
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
+		<script src="js/jquery-2.1.1.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				var scene, camera, renderer;
+				var earthMesh, cloudMesh;
+
+				function init() {
+					scene = new THREE.Scene();
+					camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+					renderer = new THREE.WebGLRenderer();
+					renderer.setSize( window.innerWidth, window.innerHeight );
+					document.body.appendChild( renderer.domElement );
+
+					// Make earthMesh
+					var geometry  = new THREE.SphereGeometry(1.5, 32, 32);
+					var material  = new THREE.MeshPhongMaterial();
+
+					material.map = THREE.ImageUtils.loadTexture('img/earthmap1k.jpg');
+					material.bumpMap = THREE.ImageUtils.loadTexture('img/earthbump1k.jpg');
+					material.bumpScale = 0.05;
+
+					material.specularMap = THREE.ImageUtils.loadTexture('img/earthspec1k.jpg');
+					material.specular = new THREE.Color(0x5E5E5E);
+
+					earthMesh = new THREE.Mesh(geometry, material)
+
+					// Make cloudMesh
+					var geometry = new THREE.SphereGeometry(1.51, 32, 32);
+					var material = new THREE.MeshPhongMaterial({
+						map: THREE.ImageUtils.loadTexture('img/earthcloudmap.jpg'),
+						side: THREE.DoubleSide,
+						opacity: 0.8,
+						transparent: true,
+						depthWrite: false,
+						alphaMap: THREE.ImageUtils.loadTexture('img/earthcloudmaptransc.jpg')
+					})
+					cloudMesh = new THREE.Mesh(geometry, material);
+					earthMesh.add(cloudMesh);
+
+					// Add earthMesh (which has cloudMesh) to scene
+					scene.add(earthMesh);
+
+					var directionalLight = new THREE.DirectionalLight( 0x696868, 1 );
+					directionalLight.position.set( 1, 1, 1 );
+					scene.add( directionalLight );
+
+					var light = new THREE.AmbientLight( 0x807E7E );
+					scene.add( light );
+
+					// create the geometry sphere
+					var geometry  = new THREE.SphereGeometry(5, 32, 32);
+					// create the material, using a texture of startfield
+					var material  = new THREE.MeshBasicMaterial();
+					material.map   = THREE.ImageUtils.loadTexture('img/galaxy_starfield.jpg');
+					material.side  = THREE.BackSide;
+					// create the mesh based on geometry and material
+					var mesh  = new THREE.Mesh(geometry, material);
+					scene.add(mesh);
+
+					camera.position.z = 5;
+				}
+
+				function render() {
+					requestAnimationFrame( render );
+					renderer.render( scene, camera );
+
+					earthMesh.rotation.y += 0.001;
+
+					cloudMesh.rotation.x -= 0.001;
+					cloudMesh.rotation.y -= 0.0005;
+				}
+
+				init();
+				render();
+			})
+		</script>
+	</body>
+</html>
