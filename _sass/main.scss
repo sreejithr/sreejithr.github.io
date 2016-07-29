@@ -12,12 +12,14 @@ body {
     padding: 35px 50px;
   }
 }
+h1,
 h2,
 h3,
 h4,
 h5 {
   font-family: Montserrat, sans-serif;
   margin: 45px 0 25px;
+  color: #333;
 }
 img {
   max-width: 100%;
@@ -37,7 +39,7 @@ a {
 }
 a:hover {
    color: #FFFFFF;
-   background-color: #000000;
+   background-color: #e81c4f;
 }
 mark {
   background: #fffc76;
@@ -266,7 +268,7 @@ aside {
   }
 }
 article {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
   .title {
     line-height: 1.4em;
@@ -293,10 +295,17 @@ article {
     border-bottom: 1px solid #000;
     margin: 30px 0;
   }
+  a {
+    color: #000;
+  }
   p {
     font-size: 19px;
     line-height: 1.9em;
     word-wrap: break-word;
+    color: #555;
+  }
+  strong {
+    color: #333;
   }
   .footnote {
     border: 0;

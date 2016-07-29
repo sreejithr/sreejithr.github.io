@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>/notes/lego-software-engineers-and-autoworkers</loc>
+<lastmod>2016-07-29T00:00:00+05:30</lastmod>
+</url>
+<url>
+<loc>/notes/the-case-for-a-react-native-browser</loc>
+<lastmod>2016-04-19T00:00:00+05:30</lastmod>
+</url>
+<url>
 <loc>/notes/react-native-android-integration</loc>
 <lastmod>2016-03-21T00:00:00+05:30</lastmod>
 </url>
@@ -12,5 +20,9 @@
 </url>
 <url>
 <loc>/</loc>
+</url>
+<url>
+<loc>/earth.html</loc>
+<lastmod>2016-04-28T13:28:03+05:30</lastmod>
 </url>
 </urlset>
